@@ -1,0 +1,29 @@
+package pv;
+import acp.*;
+
+public class AplusB extends GO<PV2> {
+  public AplusB (GO<PV2> a, GO<PV2> b) {
+    this.a = a;
+    this.b = b;
+  }
+
+  public PV2 calculate () {
+    PV2 pa = ab.a.xyz();
+    PV2 pb = ab.b.xyz();
+    PV2 pc = cd.a.xyz();
+    PV2 pd = cd.b.xyz();
+    PV2 vab = pb.minus(pa);
+    PV2 vcd = pd.minus(pc);
+    PV2 vca = pa.minus(pc);
+
+    // (a + ab t - c) x cd = 0
+    // (ca + ab t) x cd = 0
+    // ca x cd + ab x cd t = 0
+    // t = -(ca x cd) / (ab x cd)
+    Real t = vca.cross(vcd).minus().over(vab.cross(vcd));
+    PV2 p = pa.plus(vab.times(t));
+    System.out.println("ap x ab " + p.minus(pa).cross(vab) + 
+                       " cp x cd " + p.minus(pc).cross(vcd));
+    return p;
+  }
+}
